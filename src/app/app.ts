@@ -9,7 +9,9 @@ app.use(express.json());
 app.use(cors());
 
 app.get('/', (_req: Request, res: Response) => {
-  res.status(200).json({ success: true, message: 'Server is running Successfully!' });
+  res
+    .status(200)
+    .json({ success: true, message: 'Server is running Successfully!' });
 });
 
 // routes

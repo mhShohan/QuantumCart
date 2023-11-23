@@ -25,20 +25,18 @@ const orderSchema = new Schema<TOrder>({
   quantity: { type: Number, required: true, trim: true },
 });
 
-const userSchema = new Schema<TUser>(
-  {
-    userId: { type: Number, required: true, unique: true },
-    username: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    fullName: { type: fullNameSchema, required: true },
-    age: { type: Number, required: true },
-    email: { type: String, required: true, unique: true, lowercase: true },
-    isActive: { type: Boolean, required: true },
-    hobbies: [{ type: String }],
-    address: { type: addressSchema, required: true },
-    orders: { type: [orderSchema] },
-  },
-);
+const userSchema = new Schema<TUser>({
+  userId: { type: Number, required: true, unique: true },
+  username: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  fullName: { type: fullNameSchema, required: true },
+  age: { type: Number, required: true },
+  email: { type: String, required: true, unique: true, lowercase: true },
+  isActive: { type: Boolean, required: true },
+  hobbies: [{ type: String }],
+  address: { type: addressSchema, required: true },
+  orders: { type: [orderSchema] },
+});
 
 //find single user by  userId
 userSchema.statics.findByUserId = function (userId: number) {

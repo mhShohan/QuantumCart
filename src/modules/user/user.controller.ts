@@ -99,12 +99,14 @@ const deleteExistingUser = async (req: Request, res: Response) => {
 const updateExistingUser = async (req: Request, res: Response) => {
   try {
     const userId = Number(req.params.userId);
-    const validatedUser = userValidator.parse(req.body);
+    const updatedUser = req.body;
 
-    validatedUser.password = await hash(validatedUser.password);
+    if (updatedUser.password) {
+      updatedUser.password = await hash(updatedUser.password);
+    }
 
     if (await User.findByUserId(userId)) {
-      await userServices.updateUser(userId, validatedUser);
+      await userServices.updateUser(userId, updatedUser);
 
       const user = await User.findByUserId(userId);
 
@@ -165,13 +167,13 @@ const getOrders = async (req: Request, res: Response) => {
   try {
     const userId = Number(req.params.userId);
 
-    const user = await User.findByUserId(userId);
+    if (await User.findByUserId(userId)) {
+      const orders = await userServices.getAllOrdersOfUser(userId);
 
-    if (user) {
       return res.status(200).json({
         success: true,
         message: 'Order fetched successfully!',
-        data: user.orders,
+        data: orders,
       });
     } else {
       return res.status(404).json({

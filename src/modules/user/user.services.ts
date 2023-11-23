@@ -3,12 +3,16 @@ import { TOrder, TUser } from './user.interface';
 
 // fetch all users from database
 const getAllUsersFromDB = async () => {
-  return await User.find({}).select('-password -__v -orders -hobbies -isActive -_id -fullName._id -address._id');
+  return await User.find({}).select(
+    '-password -__v -orders -hobbies -isActive -_id -fullName._id -address._id',
+  );
 };
 
 // fetch single users from database
 const getSingleUserFromDB = async (userId: number) => {
-  return await User.findOne({ userId }).select('-password -__v -orders -_id -fullName._id -address._id');
+  return await User.findOne({ userId }).select(
+    '-password -__v -orders -_id -fullName._id -address._id',
+  );
 };
 
 // create new user and save in database
@@ -29,6 +33,17 @@ const updateUser = async (userId: number, data: TUser) => {
 // create new order and save in user collection
 const createOrderOfUser = async (userId: number, order: TOrder) => {
   return User.updateOne({ userId }, { $push: { orders: order } });
+};
+
+//get all orders
+const getAllOrdersOfUser = async (userId: number) => {
+  const res = await User.findOne({ userId }).select('orders');
+
+  if (res?.orders?.length && res.orders.length > 0) {
+    return res.orders;
+  } else {
+    return { description: 'No orders found!' };
+  }
 };
 
 // calculate the total price of orders
@@ -60,6 +75,7 @@ const userServices = {
   updateUser,
   createOrderOfUser,
   calculatedTotalPrice,
+  getAllOrdersOfUser,
 };
 
 export default userServices;
