@@ -1,11 +1,11 @@
 {
   "name": "l2-assignment-2",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "",
   "main": "server.js",
   "scripts": {
     "build": "tsc",
-    "start": "node src/app/server.js",
+    "start": "node dist/app/server.js",
     "dev": "ts-node-dev --respawn --transpile-only src/app/server.ts",
     "lint": "eslint src --ignore-path .eslintignore --ext .ts",
     "lint:fix": "npx eslint src --fix",

@@ -8,8 +8,8 @@ const app: Application = express();
 app.use(express.json());
 app.use(cors());
 
-app.get('/health', (_req: Request, res: Response) => {
-  res.status(200).json({ success: true, message: 'Working Successfully!' });
+app.get('/', (_req: Request, res: Response) => {
+  res.status(200).json({ success: true, message: 'Server is running Successfully!' });
 });
 
 // routes

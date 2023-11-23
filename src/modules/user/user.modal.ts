@@ -36,7 +36,7 @@ const userSchema = new Schema<TUser>(
     isActive: { type: Boolean, required: true },
     hobbies: [{ type: String }],
     address: { type: addressSchema, required: true },
-    orders: { type: [orderSchema], default: [] },
+    orders: { type: [orderSchema] },
   },
   { timestamps: true },
 );
