@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import userServices from './user.services';
 import User from './user.modal';
-import userValidator from './user.validator';
-import { TUserPartial } from './user.interface';
 import hash from '../../utils/hash';
+import userServices from './user.services';
+import { TUserPartial } from './user.interface';
+import userValidator from './user.validator';
 import orderValidator from './order.validator';
 
 const getAllUsers = async (_req: Request, res: Response) => {
@@ -12,7 +12,7 @@ const getAllUsers = async (_req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: 'All Users fetched Successfully',
+      message: 'Users fetched Successfully',
       data: users,
     });
   } catch (error) {
@@ -59,7 +59,7 @@ const createNewUser = async (req: Request, res: Response) => {
 
     res.status(201).json({
       success: true,
-      message: 'New user created Successfully',
+      message: 'User created Successfully',
       data: tempUser,
     });
   } catch (error) {
@@ -72,10 +72,11 @@ const createNewUser = async (req: Request, res: Response) => {
 const deleteExistingUser = async (req: Request, res: Response) => {
   try {
     const userId = Number(req.params.userId);
+
     if (await User.findByUserId(userId)) {
       await userServices.deleteUser(userId);
 
-      return res.status(200).json({
+      return res.status(204).json({
         success: true,
         message: 'User deleted Successfully',
         data: null,
@@ -109,6 +110,7 @@ const updateExistingUser = async (req: Request, res: Response) => {
 
       const tempUser: TUserPartial = JSON.parse(JSON.stringify(user));
       delete tempUser.password;
+      delete tempUser.orders;
 
       return res.status(200).json({
         success: true,
@@ -163,10 +165,10 @@ const getOrders = async (req: Request, res: Response) => {
   try {
     const userId = Number(req.params.userId);
 
-    const user = await User.findByUserId(userId)
+    const user = await User.findByUserId(userId);
 
     if (user) {
-      return res.status(201).json({
+      return res.status(200).json({
         success: true,
         message: 'Order fetched successfully!',
         data: user.orders,
@@ -190,7 +192,7 @@ const totalPrice = async (req: Request, res: Response) => {
   try {
     const userId = Number(req.params.userId);
     if (await User.findByUserId(userId)) {
-      const result = await userServices.calculatedTotalPrice(userId)
+      const result = await userServices.calculatedTotalPrice(userId);
 
       return res.status(200).json({
         success: true,
@@ -218,7 +220,9 @@ const userController = {
   createNewUser,
   deleteExistingUser,
   updateExistingUser,
-  createOrder, getOrders, totalPrice
+  createOrder,
+  getOrders,
+  totalPrice,
 };
 
 export default userController;
