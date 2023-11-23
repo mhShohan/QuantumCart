@@ -4,6 +4,7 @@ import User from './user.modal';
 import userValidator from './user.validator';
 import { TUserPartial } from './user.interface';
 import hash from '../../utils/hash';
+import orderValidator from './order.validator';
 
 const getAllUsers = async (_req: Request, res: Response) => {
   try {
@@ -54,6 +55,7 @@ const createNewUser = async (req: Request, res: Response) => {
 
     const tempUser: TUserPartial = JSON.parse(JSON.stringify(user));
     delete tempUser.password;
+    delete tempUser.orders;
 
     res.status(201).json({
       success: true,
@@ -128,12 +130,42 @@ const updateExistingUser = async (req: Request, res: Response) => {
   }
 };
 
+const createOrder = async (req: Request, res: Response) => {
+  try {
+    const userId = Number(req.params.userId);
+
+    const validatedOrder = orderValidator.parse(req.body);
+
+    if (await User.findByUserId(userId)) {
+      await userServices.createOrderOfUser(userId, validatedOrder);
+
+      return res.status(201).json({
+        success: true,
+        message: 'Order created successfully!',
+        data: null,
+      });
+    } else {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+        error: {
+          code: 404,
+          description: 'User not found!',
+        },
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error Occurred!', error });
+  }
+};
+
 const userController = {
   getAllUsers,
   getSingleUser,
   createNewUser,
   deleteExistingUser,
   updateExistingUser,
+  createOrder,
 };
 
 export default userController;
