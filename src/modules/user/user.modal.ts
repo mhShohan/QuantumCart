@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import bcrypt from 'bcrypt';
 import { TAddress, TFullName, TUser, UserModel } from './user.interface';
 
 const fullNameSchema = new Schema<TFullName, UserModel>({
@@ -27,14 +28,16 @@ const userSchema = new Schema<TUser>(
   { timestamps: true },
 );
 
-/**
- * find single user by  userId
- * @param userId number
- * @returns
- */
+//find single user by  userId
 userSchema.statics.findByUserId = function (userId: number) {
   return this.findOne({ userId });
 };
+
+// hash password before save to database
+userSchema.pre('save', async function (next) {
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
 
 const User = model<TUser, UserModel>('user', userSchema);
 

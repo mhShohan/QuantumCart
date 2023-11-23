@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import userServices from './user.services';
 import User from './user.modal';
+import userValidator from './user.validator';
+import { TUserPartial } from './user.interface';
 
 const getAllUsers = async (_req: Request, res: Response) => {
   try {
@@ -43,6 +45,26 @@ const getSingleUser = async (req: Request, res: Response) => {
   }
 };
 
-const userController = { getAllUsers, getSingleUser };
+const createNewUser = async (req: Request, res: Response) => {
+  try {
+    const validatedUser = userValidator.parse(req.body);
+
+    const user = await userServices.createUser(validatedUser);
+
+    const tempUser: TUserPartial = JSON.parse(JSON.stringify(user));
+    delete tempUser.password;
+
+    res.status(200).json({
+      success: true,
+      message: 'All Users fetched Successfully',
+      data: tempUser,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: 'Failed to create new user!', error });
+  }
+};
+const userController = { getAllUsers, getSingleUser, createNewUser };
 
 export default userController;

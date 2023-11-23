@@ -1,3 +1,4 @@
+import { TUser } from './user.interface';
 import User from './user.modal';
 
 const getAllUsersFromDB = async () => {
@@ -8,6 +9,10 @@ const getSingleUserFromDB = async (userId: number) => {
   return await User.findOne({ userId });
 };
 
-const userServices = { getAllUsersFromDB, getSingleUserFromDB };
+const createUser = async (user: TUser) => {
+  return await User.create(user);
+};
+
+const userServices = { getAllUsersFromDB, getSingleUserFromDB, createUser };
 
 export default userServices;

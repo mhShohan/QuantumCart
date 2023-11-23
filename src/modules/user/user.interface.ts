@@ -23,6 +23,8 @@ export type TUser = {
   address: TAddress;
 };
 
+export type TUserPartial = Partial<TUser>;
+
 export interface UserModel extends Model<TUser> {
   // eslint-disable-next-line no-unused-vars
   findByUserId(userId: number): Promise<TUser | null>;
