@@ -38,7 +38,6 @@ const userSchema = new Schema<TUser>(
     address: { type: addressSchema, required: true },
     orders: { type: [orderSchema] },
   },
-  { timestamps: true },
 );
 
 //find single user by  userId
