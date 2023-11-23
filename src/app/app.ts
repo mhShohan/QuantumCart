@@ -1,5 +1,6 @@
 import cors from 'cors';
 import express, { Application, Request, Response } from 'express';
+import userRoutes from '../modules/user/user.routes';
 
 const app: Application = express();
 
@@ -12,7 +13,7 @@ app.get('/health', (_req: Request, res: Response) => {
 });
 
 // routes
-app.use('/api', () => {});
+app.use('/api/users', userRoutes);
 
 // not found
 app.all('*', (_req: Request, res: Response) => {

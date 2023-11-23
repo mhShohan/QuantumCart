@@ -1,3 +1,5 @@
+import { Model } from 'mongoose';
+
 export type TFullName = {
   firstName: string;
   lastName: string;
@@ -20,3 +22,8 @@ export type TUser = {
   hobbies: Array<string>;
   address: TAddress;
 };
+
+export interface UserModel extends Model<TUser> {
+  // eslint-disable-next-line no-unused-vars
+  findByUserId(userId: number): Promise<TUser | null>;
+}
