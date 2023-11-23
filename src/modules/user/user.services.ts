@@ -17,11 +17,16 @@ const deleteUser = async (userId: number) => {
   return await User.deleteOne({ userId });
 };
 
+const updateUser = async (userId: number, data: TUser) => {
+  return await User.updateOne({ userId }, data);
+};
+
 const userServices = {
   getAllUsersFromDB,
   getSingleUserFromDB,
   createUser,
   deleteUser,
+  updateUser,
 };
 
 export default userServices;

@@ -3,6 +3,7 @@ import userServices from './user.services';
 import User from './user.modal';
 import userValidator from './user.validator';
 import { TUserPartial } from './user.interface';
+import hash from '../../utils/hash';
 
 const getAllUsers = async (_req: Request, res: Response) => {
   try {
@@ -27,7 +28,7 @@ const getSingleUser = async (req: Request, res: Response) => {
 
       return res.status(200).json({
         success: true,
-        message: 'All Users fetched Successfully',
+        message: 'User fetched Successfully',
         data: users,
       });
     } else {
@@ -92,11 +93,47 @@ const deleteExistingUser = async (req: Request, res: Response) => {
   }
 };
 
+const updateExistingUser = async (req: Request, res: Response) => {
+  try {
+    const userId = Number(req.params.userId);
+    const validatedUser = userValidator.parse(req.body);
+
+    validatedUser.password = await hash(validatedUser.password);
+
+    if (await User.findByUserId(userId)) {
+      await userServices.updateUser(userId, validatedUser);
+
+      const user = await User.findByUserId(userId);
+
+      const tempUser: TUserPartial = JSON.parse(JSON.stringify(user));
+      delete tempUser.password;
+
+      return res.status(200).json({
+        success: true,
+        message: 'User updated Successfully',
+        data: tempUser,
+      });
+    } else {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+        error: {
+          code: 404,
+          description: 'User not found!',
+        },
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error Occurred!', error });
+  }
+};
+
 const userController = {
   getAllUsers,
   getSingleUser,
   createNewUser,
   deleteExistingUser,
+  updateExistingUser,
 };
 
 export default userController;
