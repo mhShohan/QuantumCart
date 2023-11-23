@@ -54,9 +54,9 @@ const createNewUser = async (req: Request, res: Response) => {
     const tempUser: TUserPartial = JSON.parse(JSON.stringify(user));
     delete tempUser.password;
 
-    res.status(200).json({
+    res.status(201).json({
       success: true,
-      message: 'All Users fetched Successfully',
+      message: 'New user created Successfully',
       data: tempUser,
     });
   } catch (error) {
@@ -65,6 +65,38 @@ const createNewUser = async (req: Request, res: Response) => {
       .json({ success: false, message: 'Failed to create new user!', error });
   }
 };
-const userController = { getAllUsers, getSingleUser, createNewUser };
+
+const deleteExistingUser = async (req: Request, res: Response) => {
+  try {
+    const userId = Number(req.params.userId);
+    if (await User.findByUserId(userId)) {
+      await userServices.deleteUser(userId);
+
+      return res.status(200).json({
+        success: true,
+        message: 'User deleted Successfully',
+        data: null,
+      });
+    } else {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+        error: {
+          code: 404,
+          description: 'User not found!',
+        },
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error Occurred!', error });
+  }
+};
+
+const userController = {
+  getAllUsers,
+  getSingleUser,
+  createNewUser,
+  deleteExistingUser,
+};
 
 export default userController;

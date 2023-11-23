@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "node src/app/server.js",
     "dev": "ts-node-dev --respawn --transpile-only src/app/server.ts",
-    "lint": "eslint --ignore-path .eslintignore --ext .js,.ts",
+    "lint": "eslint src --ignore-path .eslintignore --ext .ts",
     "lint:fix": "npx eslint src --fix",
     "format": "prettier --ignore-path .gitignore --write \"./src/**/*.+(js|ts|json)\"",
     "format:fix": "npx prettier --write src",
