@@ -1,0 +1,27 @@
+{
+  "name": "l2-assignment-2",
+  "version": "0.1.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node src/app/server.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/app/server.ts",
+    "lint": "eslint --ignore-path .eslintignore --ext .js,.ts",
+    "lint:fix": "npx eslint src --fix",
+    "format": "prettier --ignore-path .gitignore --write \"./src/**/*.+(js|ts|json)\"",
+    "format:fix": "npx prettier --write src",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "mhShohan",
+  "license": "ISC",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.12.0",
+    "@typescript-eslint/parser": "^6.12.0",
+    "eslint": "^8.54.0",
+    "eslint-config-prettier": "^9.0.0",
+    "prettier": "^3.1.0",
+    "typescript": "^5.3.2"
+  }
+}
