@@ -37,10 +37,10 @@ const createOrderOfUser = async (userId: number, order: TOrder) => {
 
 //get all orders
 const getAllOrdersOfUser = async (userId: number) => {
-  const res = await User.findOne({ userId }).select('orders');
+  const res = await User.findOne({ userId }).select('orders -_id');
 
   if (res?.orders?.length && res.orders.length > 0) {
-    return res.orders;
+    return res;
   } else {
     return { description: 'No orders found!' };
   }
@@ -49,21 +49,22 @@ const getAllOrdersOfUser = async (userId: number) => {
 // calculate the total price of orders
 const calculatedTotalPrice = async (userId: number) => {
   return await User.aggregate([
-    { $match: { userId } },
+    { $match: { userId } }, // match the document with user id
     {
-      $unwind: '$orders',
+      $unwind: '$orders', // Deconstruct the order array
     },
     {
+      // group documents and calculate total price
       $group: {
         _id: '$_id',
         totalPrice: {
           $sum: {
-            $multiply: ['$orders.price', '$orders.quantity'],
+            $multiply: ['$orders.price', '$orders.quantity'], //  multiply price and quantity
           },
         },
       },
     },
-    { $project: { _id: 0, totalPrice: 1 } },
+    { $project: { _id: 0, totalPrice: 1 } }, // remove all other fields except totalPrice
   ]);
 };
 

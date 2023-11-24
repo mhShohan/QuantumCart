@@ -49,10 +49,12 @@ const getSingleUser = async (req: Request, res: Response) => {
 
 const createNewUser = async (req: Request, res: Response) => {
   try {
+    // validate the User data coming from request body
     const validatedUser = userValidator.parse(req.body);
 
     const user = await userServices.createUser(validatedUser);
 
+    //remove the unwanted fields
     const tempUser: TUserPartial = JSON.parse(JSON.stringify(user));
     delete tempUser.password;
     delete tempUser.orders;
@@ -101,13 +103,12 @@ const updateExistingUser = async (req: Request, res: Response) => {
     const userId = Number(req.params.userId);
     const updatedUser = req.body;
 
+    // if password updated then hash it before update
     if (updatedUser.password) {
       updatedUser.password = await hash(updatedUser.password);
     }
 
-    const existedUser = await User.findByUserId(userId);
-
-    if (existedUser) {
+    if (await User.findByUserId(userId)) {
       await userServices.updateUser(userId, updatedUser);
 
       const user = await User.findOne({ userId }).select(
@@ -138,6 +139,7 @@ const createOrder = async (req: Request, res: Response) => {
   try {
     const userId = Number(req.params.userId);
 
+    // validate the Order data coming from request body
     const validatedOrder = orderValidator.parse(req.body);
 
     if (await User.findByUserId(userId)) {
