@@ -105,19 +105,19 @@ const updateExistingUser = async (req: Request, res: Response) => {
       updatedUser.password = await hash(updatedUser.password);
     }
 
-    if (await User.findByUserId(userId)) {
+    const existedUser = await User.findByUserId(userId);
+
+    if (existedUser) {
       await userServices.updateUser(userId, updatedUser);
 
-      const user = await User.findByUserId(userId);
-
-      const tempUser: TUserPartial = JSON.parse(JSON.stringify(user));
-      delete tempUser.password;
-      delete tempUser.orders;
+      const user = await User.findOne({ userId }).select(
+        '-password -orders -_id -__v -fullName._id -address._id',
+      );
 
       return res.status(200).json({
         success: true,
         message: 'User updated Successfully',
-        data: tempUser,
+        data: user,
       });
     } else {
       return res.status(404).json({
