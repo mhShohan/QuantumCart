@@ -19,20 +19,7 @@
     "noUnusedParameters": false, // used to check if any parameter is not used
     "importHelpers": true,
     "jsx": "react-jsx",
-    "strictNullChecks": true,
-    "baseUrl": "src",
-    "paths": {
-      "@/*": ["*"],
-      "@configs": ["configs"],
-      "@components/*": ["components/*"],
-      "@lib/*": ["lib/*"],
-      "@hooks/*": ["hooks/*"],
-      "@layouts/*": ["layouts/*"],
-      "@routes/*": ["routes/*"],
-      "@store/*": ["store/*"],
-      "@utils/*": ["utils/*"],
-      "@pages/*": ["pages/*"]
-    }
+    "strictNullChecks": true
   },
   "references": [{ "path": "./tsconfig.node.json" }],
   "include": ["src"],
